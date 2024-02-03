@@ -43,10 +43,8 @@ namespace CardsHandlerServerPart.Data
             }
             catch (Exception)
             {
-
                 throw;
             }
-           
         }
 
         ~PostgresDB()
@@ -79,6 +77,12 @@ namespace CardsHandlerServerPart.Data
             _connection.Close();
         }
 
+        /// <summary>
+        /// Получаем последний свободный номер карты.
+        /// </summary>
+        /// <param name="lastFreeVol">
+        /// Последний номер карты.
+        /// </param>
         public void GetLastFreeValue(out int lastFreeVol)
         {
             lastFreeVol = 0;

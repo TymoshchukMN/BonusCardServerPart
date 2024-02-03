@@ -21,6 +21,9 @@ namespace CardsHandlerServerPart
         /// </summary>
         private const int MinPookSize = 100;
 
+        /// <summary>
+        /// Экземпляр класса CardsPool.
+        /// </summary>
         private static CardsPool _instance;
 
         /// <summary>
@@ -31,24 +34,34 @@ namespace CardsHandlerServerPart
         /// <summary>
         /// Флаг свободен ли обработчик пула.
         /// </summary>
-        private bool _isBusy = false;
+        private bool _isBusy;
 
         private CardsPool()
         {
+            _isBusy = false;
         }
+
+        #region PROPERTIES
 
         public bool IsBusy
         {
-            get { return _isBusy = false; }
-            private set { _isBusy = false; }
+            get
+            {
+                return _isBusy;
+            }
+
+            private set
+            {
+                _isBusy = value;
+            }
         }
 
-        public List<int> PoolCards
-        {
-            get { return _poolCarsNumber; }
-            private set { _poolCarsNumber = value; }
-        }
+        #endregion PROPERTIES
 
+        /// <summary>
+        /// Получить экземпляр объекта CardsPool.
+        /// </summary>
+        /// <returns>CardsPool.</returns>
         public static CardsPool GetInstance()
         {
             if (_instance == null)
@@ -59,6 +72,12 @@ namespace CardsHandlerServerPart
             return _instance;
         }
 
+        /// <summary>
+        /// Заполнить пулл доступных номеров.
+        /// </summary>
+        /// <param name="startVol">
+        /// Первый доступный номер.
+        /// </param>
         public void FillPool(int startVol)
         {
             for (int i = startVol; i < PoolSixe + startVol; i++)
@@ -67,10 +86,10 @@ namespace CardsHandlerServerPart
             }
         }
 
-        public int GetCarNumberAsync()
+        public int GetCarNumber()
         {
             // указываем, что генератор карт занят.
-            _isBusy = true;
+            IsBusy = true;
 
             int cardNumber = _poolCarsNumber[0];
             _poolCarsNumber.Remove(cardNumber);
@@ -82,7 +101,7 @@ namespace CardsHandlerServerPart
                 FillPool(nextVol);
             }
 
-            _isBusy = false;
+            IsBusy = false;
 
             return cardNumber;
         }
