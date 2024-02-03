@@ -82,10 +82,16 @@ namespace CardsHandlerServerPart
         {
             for (int i = startVol; i < PoolSixe + startVol; i++)
             {
-                _poolCarsNumber.Add(startVol);
+                _poolCarsNumber.Add(i);
             }
         }
 
+        /// <summary>
+        /// Получить номер карты.
+        /// </summary>
+        /// <returns>
+        /// номер карты.
+        /// </returns>
         public int GetCarNumber()
         {
             // указываем, что генератор карт занят.

@@ -99,7 +99,7 @@ namespace CardsHandlerServerPart.Data
             if (dataTable.Rows.Count != 0)
             {
                 data.Close();
-                npgsqlCommand.CommandText = "Select max(cardnumber) from cards";
+                npgsqlCommand.CommandText = "Select max(cardnumber) as cardnumber from cards";
                 data = npgsqlCommand.ExecuteReader();
 
                 while (data.Read())
