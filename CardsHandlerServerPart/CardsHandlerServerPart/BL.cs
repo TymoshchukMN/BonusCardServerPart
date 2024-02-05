@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using CardsHandlerServerPart.Configs;
+using CardsHandlerServerPart.JSON;
 using Newtonsoft.Json;
 
 namespace CardsHandlerServerPart
@@ -25,11 +26,11 @@ namespace CardsHandlerServerPart
         ///  Получить конфиг подключениея к серверу.
         /// </summary>
         /// <returns>конфиг подключениея к серверу</returns>
-        public static ServerConfig GetServerConfig()
+        public static SrvConfig GetServerConfig()
         {
-            const string ConfFilePathDB = @"\\172.16.112.40\share\TymoshchukMN\DBconfigFile.json";
-            string srvConfigFile = File.ReadAllText(ConfFilePathDB);
-            ServerConfig srvConfigJSON = JsonConvert.DeserializeObject<ServerConfig>(srvConfigFile);
+            const string ConfFilePathSRV = @"\\172.16.112.40\share\TymoshchukMN\SRVconfigFile.json";
+            string srvConfigFile = File.ReadAllText(ConfFilePathSRV);
+            SrvConfig srvConfigJSON = JsonConvert.DeserializeObject<SrvConfig>(srvConfigFile);
 
             return srvConfigJSON;
         }

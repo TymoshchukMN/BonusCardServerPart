@@ -11,6 +11,8 @@ namespace CardsHandlerServerPart
     /// </summary>
     internal class CardsPool
     {
+        #region FIELDS
+
         /// <summary>
         /// Размер пула.
         /// </summary>
@@ -36,6 +38,8 @@ namespace CardsHandlerServerPart
         /// </summary>
         private bool _isBusy;
 
+        #endregion FIELDS
+
         private CardsPool()
         {
             _isBusy = false;
@@ -57,6 +61,8 @@ namespace CardsHandlerServerPart
         }
 
         #endregion PROPERTIES
+
+        #region METHODS
 
         /// <summary>
         /// Получить экземпляр объекта CardsPool.
@@ -111,5 +117,7 @@ namespace CardsHandlerServerPart
 
             return cardNumber;
         }
+
+        #endregion METHODS
     }
 }

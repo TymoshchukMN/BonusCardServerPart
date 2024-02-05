@@ -1,4 +1,4 @@
-﻿namespace CardsHandlerServerPart
+﻿namespace CardsHandlerServerPart.JSON
 {
     internal class DBConfigJSON
     {

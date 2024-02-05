@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Data;
+using CardsHandlerServerPart.Interfaces;
 using Npgsql;
 
 namespace CardsHandlerServerPart.Data
 {
-    internal class PostgresDB : IDisposable
+    internal class PostgresDB : IDisposable, IGetLastFreeValue
     {
         #region FIELDS
 

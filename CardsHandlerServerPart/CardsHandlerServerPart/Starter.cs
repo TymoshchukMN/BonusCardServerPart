@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using CardsHandlerServerPart.Configs;
 using CardsHandlerServerPart.Data;
+using CardsHandlerServerPart.Interfaces;
+using CardsHandlerServerPart.JSON;
 
 namespace CardsHandlerServerPart
 {
@@ -15,12 +17,11 @@ namespace CardsHandlerServerPart
             CardsPool cardsPoll = CardsPool.GetInstance();
             DBConfigJSON dBConfig = BL.GetDBConfig();
 
-            PostgresDB pgDB = PostgresDB.GetInstance(
+            IGetLastFreeValue pgDB = PostgresDB.GetInstance(
                dBConfig.DBConfig.Server,
                dBConfig.DBConfig.UserName,
                dBConfig.DBConfig.DBname,
                dBConfig.DBConfig.Port);
-
             pgDB.GetLastFreeValue(out int lastFreeVol);
             cardsPoll.FillPool(lastFreeVol);
 
@@ -33,12 +34,12 @@ namespace CardsHandlerServerPart
         /// </summary>
         public static void StartServer()
         {
-            ServerConfig srvConfig = BL.GetServerConfig();
-            //int port = srvConfig.Port;
+            // Получаем конфиг подключения к серверу.
+            SrvConfig srvConfig = BL.GetServerConfig();
 
-            // string serverAddress = srvConfig.Server;
-            string serverAddress = "192.168.220.102";
-            int port = 49001;
+            int port = srvConfig.Port;
+            string serverAddress = srvConfig.Server;
+
             const string RequestCard = "CardRequest";
 
             IPAddress ipAddress = IPAddress.Parse(serverAddress);
@@ -79,6 +80,7 @@ namespace CardsHandlerServerPart
 
                         cardNumber = cardsPoll.GetCarNumber();
                     }
+
                     Console.WriteLine();
                     responseData = Encoding.ASCII.GetBytes(
                         cardNumber.ToString().ToCharArray());
@@ -89,11 +91,13 @@ namespace CardsHandlerServerPart
             }
         }
 
+        /// <summary>
+        /// Ждем произвольное количество милисекунд для повторного запроса.
+        /// </summary>
         private static void WaitRandomTime()
         {
             Random random = new Random();
             Thread.Sleep(random.Next(15, 1000));
         }
-
     }
 }
