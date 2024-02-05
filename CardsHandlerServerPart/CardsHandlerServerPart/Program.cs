@@ -5,8 +5,6 @@
         public static void Main(string[] args)
         {
             Starter.Run();
-
-            Starter.StartServer();
         }
     }
 }

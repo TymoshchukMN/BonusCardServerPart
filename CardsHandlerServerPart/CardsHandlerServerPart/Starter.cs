@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using CardsHandlerServerPart.Configs;
 using CardsHandlerServerPart.Data;
 
 namespace CardsHandlerServerPart
@@ -22,16 +23,25 @@ namespace CardsHandlerServerPart
 
             pgDB.GetLastFreeValue(out int lastFreeVol);
             cardsPoll.FillPool(lastFreeVol);
-            Console.WriteLine();
+
+            // Запуск сервера.
+            StartServer();
         }
 
+        /// <summary>
+        /// Запуск сервера обработчика пула.
+        /// </summary>
         public static void StartServer()
         {
-            const int port = 49001;
-            const string ServerAddress = "127.0.0.1";
+            ServerConfig srvConfig = BL.GetServerConfig();
+            //int port = srvConfig.Port;
+
+            // string serverAddress = srvConfig.Server;
+            string serverAddress = "192.168.220.102";
+            int port = 49001;
             const string RequestCard = "CardRequest";
 
-            IPAddress ipAddress = IPAddress.Parse(ServerAddress);
+            IPAddress ipAddress = IPAddress.Parse(serverAddress);
             TcpListener listener = new TcpListener(ipAddress, port);
             CardsPool cardsPoll = CardsPool.GetInstance();
             listener.Start();

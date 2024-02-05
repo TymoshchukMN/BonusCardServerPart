@@ -104,9 +104,11 @@
   <ItemGroup>
     <Compile Include="BL.cs" />
     <Compile Include="CardsPool.cs" />
+    <Compile Include="Configs\ServerConfig.cs" />
     <Compile Include="Data\PostgresDB.cs" />
-    <Compile Include="DBConfig.cs" />
-    <Compile Include="DBConfigJSON.cs" />
+    <Compile Include="Configs\DBConfig.cs" />
+    <Compile Include="JSON\DBConfigJSON.cs" />
+    <Compile Include="JSON\ServerConfigJSON.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Starter.cs" />
