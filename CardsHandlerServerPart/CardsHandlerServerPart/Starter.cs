@@ -68,10 +68,13 @@ namespace CardsHandlerServerPart
                     // если нет - ждем произвольное время
                     if (!cardsPoll.IsBusy)
                     {
+                        Console.WriteLine("Пулл свободен. Получение номера карты...");
                         cardNumber = cardsPoll.GetCarNumber();
+                        Console.WriteLine($"Карта получена, номер {cardNumber}");
                     }
                     else
                     {
+                        Console.WriteLine("Пулл занят. Получение номера карты...");
                         do
                         {
                             WaitRandomTime();

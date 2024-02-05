@@ -31,7 +31,7 @@ namespace CardsHandlerServerPart
         /// <summary>
         /// Пулл номеро карт для выдачи.
         /// </summary>
-        private List<int> _poolCarsNumber = new List<int>() { 0 };
+        private List<int> _poolCard = new List<int>() { 0 };
 
         /// <summary>
         /// Флаг свободен ли обработчик пула.
@@ -86,9 +86,16 @@ namespace CardsHandlerServerPart
         /// </param>
         public void FillPool(int startVol)
         {
-            for (int i = startVol; i < PoolSixe + startVol; i++)
+            if (startVol == 0)
             {
-                _poolCarsNumber.Add(i);
+                startVol = 100000;
+            }
+            else
+            {
+                for (int i = startVol; i < PoolSixe + startVol; i++)
+                {
+                    _poolCard.Add(i);
+                }
             }
         }
 
@@ -103,12 +110,12 @@ namespace CardsHandlerServerPart
             // указываем, что генератор карт занят.
             IsBusy = true;
 
-            int cardNumber = _poolCarsNumber[0];
-            _poolCarsNumber.Remove(cardNumber);
+            int cardNumber = _poolCard[1];
+            _poolCard.Remove(cardNumber);
 
-            if (_poolCarsNumber.Count <= MinPookSize)
+            if (_poolCard.Count <= MinPookSize)
             {
-                int nextVol = _poolCarsNumber.Max() + 1;
+                int nextVol = _poolCard.Max() + 1;
 
                 FillPool(nextVol);
             }
