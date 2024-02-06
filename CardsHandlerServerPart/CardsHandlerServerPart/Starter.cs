@@ -45,13 +45,11 @@ namespace CardsHandlerServerPart
             // Получаем конфиг подключения к серверу.
             SrvConfig srvConfig = BL.GetServerConfig();
 
-            //int port = srvConfig.Port;
-            //string serverAddress = srvConfig.Server;
+            int port = srvConfig.Port;
+            string serverAddress = srvConfig.Server;
 
-            int port = 49001;
-            string serverAddress = "127.0.0.1";
-
-            const string RequestCard = "CardRequest";
+            //int port = 49001;
+            //string serverAddress = "127.0.0.1";
 
             IPAddress ipAddress = IPAddress.Parse(serverAddress);
             TcpListener listener = new TcpListener(ipAddress, port);
