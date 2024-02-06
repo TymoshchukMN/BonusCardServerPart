@@ -62,7 +62,7 @@ namespace CardsHandlerServerPart
             NetworkStream stream = client.GetStream();
 
             byte[] buffer = new byte[1024];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
+            int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
             string dataReceived = Encoding.UTF8.GetString(buffer, 0, bytesRead);
             byte[] responseData;
             Console.WriteLine($"Получено от клиента: {dataReceived}");

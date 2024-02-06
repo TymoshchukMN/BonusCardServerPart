@@ -217,7 +217,7 @@ namespace CardsHandlerServerPart.Data
             {
                 _connection.Execute(sqlCommand, queryArguments);
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
@@ -321,7 +321,7 @@ namespace CardsHandlerServerPart.Data
                         int newVol = card.Ballance - summ;
                         UpdateBallance(card, cardNum, out results, newVol);
 
-                        FillCard(ref card,ref results);
+                        FillCard(ref card, ref results);
                     }
                 }
             }
@@ -366,7 +366,7 @@ namespace CardsHandlerServerPart.Data
                 {
                     int newVol = card.Ballance + summ;
                     UpdateBallance(card, cardNum, out results, newVol);
-                    FillCard(ref card,ref results);
+                    FillCard(ref card, ref results);
                 }
             }
             else
@@ -422,6 +422,7 @@ namespace CardsHandlerServerPart.Data
         /// <summary>
         /// Получить все карты.
         /// </summary>
+        /// <param name="dataTable">DataTable.</param>
         /// <returns>Таблица с картами.</returns>
         public ResultOperations GetExpiredCards(out DataTable dataTable)
         {
@@ -434,7 +435,7 @@ namespace CardsHandlerServerPart.Data
 
             IEnumerable<Card> results =
                 _connection.Query<Card>(
-                    sqlCommand, new { date = DateTime.Today.Date});
+                    sqlCommand, new { date = DateTime.Today.Date });
 
             dataTable.Columns.Add("Cardnumber", typeof(int));
             dataTable.Columns.Add("ExpirationDate", typeof(DateTime));
