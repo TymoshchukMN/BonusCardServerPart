@@ -35,5 +35,12 @@ namespace CardsHandlerServerPart
             return srvConfigJSON;
         }
 
+        public static CreateCardConfig GetCreateCardConfig(string json)
+        {
+            string srvConfigFile = File.ReadAllText(json);
+            CreateCardConfig srvConfigJSON = JsonConvert.DeserializeObject<CreateCardConfig>(srvConfigFile);
+
+            return srvConfigJSON;
+        }
     }
 }

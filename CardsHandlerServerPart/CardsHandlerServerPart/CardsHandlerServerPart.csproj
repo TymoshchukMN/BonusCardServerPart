@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.1.28\lib\net461\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -103,11 +106,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BL.cs" />
+    <Compile Include="Card.cs" />
     <Compile Include="CardsPool.cs" />
     <Compile Include="Configs\SrvConfig.cs" />
     <Compile Include="Data\PostgresDB.cs" />
     <Compile Include="Configs\DBConfig.cs" />
+    <Compile Include="Enums\BonusOperations.cs" />
+    <Compile Include="Enums\CardsOperation.cs" />
+    <Compile Include="Enums\ResultOperations.cs" />
+    <Compile Include="Enums\SearchType.cs" />
     <Compile Include="Interfaces\IGetLastFreeValue.cs" />
+    <Compile Include="Interfaces\IProcessCardsDB.cs" />
+    <Compile Include="JSON\CreateCardConfig.cs" />
+    <Compile Include="JSON\CreateCardFilds.cs" />
     <Compile Include="JSON\DBConfigJSON.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
