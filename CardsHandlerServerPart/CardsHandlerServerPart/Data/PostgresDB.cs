@@ -239,7 +239,7 @@ namespace CardsHandlerServerPart.Data
                 string sqlCommand = $"SELECT * FROM cards WHERE \"phoneNumber\" = @phone";
 
                 IEnumerable<Card> results = _connection.Query<Card>(sqlCommand, new { phone = number });
-                FillCard(card, results);
+                FillCard(ref card, ref results);
             }
             else
             {
@@ -271,7 +271,7 @@ namespace CardsHandlerServerPart.Data
                         sqlCommand,
                         new { cardNum = number });
 
-                FillCard(card, results);
+                FillCard(ref card, ref results);
             }
             else
             {
@@ -304,7 +304,7 @@ namespace CardsHandlerServerPart.Data
                         sqlCommand,
                         new { cardNum = cardNum });
 
-                FillCard(card, results);
+                FillCard(ref card, ref results);
 
                 if (card.ExpirationDate < DateTime.Today)
                 {
@@ -321,7 +321,7 @@ namespace CardsHandlerServerPart.Data
                         int newVol = card.Ballance - summ;
                         UpdateBallance(card, cardNum, out results, newVol);
 
-                        FillCard(card, results);
+                        FillCard(ref card,ref results);
                     }
                 }
             }
@@ -349,14 +349,14 @@ namespace CardsHandlerServerPart.Data
             if (CheckIfCardExist(cardNum))
             {
                 string sqlCommand =
-                    $"SELECT ballance FROM cards WHERE cardnumber = @cardnumber";
+                    $"SELECT * FROM cards WHERE cardnumber = @cardnumber";
 
                 IEnumerable<Card> results =
                     _connection.Query<Card>(
                         sqlCommand,
                         new { cardNum = cardNum });
 
-                FillCard(card, results);
+                FillCard(ref card, ref results);
 
                 if (card.ExpirationDate < DateTime.Today)
                 {
@@ -366,7 +366,7 @@ namespace CardsHandlerServerPart.Data
                 {
                     int newVol = card.Ballance + summ;
                     UpdateBallance(card, cardNum, out results, newVol);
-                    FillCard(card, results);
+                    FillCard(ref card,ref results);
                 }
             }
             else
@@ -460,7 +460,7 @@ namespace CardsHandlerServerPart.Data
             return resultOperations;
         }
 
-        private static void FillCard(Card card, IEnumerable<Card> results)
+        private static void FillCard(ref Card card, ref IEnumerable<Card> results)
         {
             foreach (var item in results)
             {
@@ -481,7 +481,7 @@ namespace CardsHandlerServerPart.Data
             _connection.Execute(sqlCommand, new
             {
                 newBallance = newVol,
-                cardnumber = card.Cardnumber,
+                cardnumber = cardNum,
             });
 
             sqlCommand =

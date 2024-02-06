@@ -132,12 +132,13 @@ namespace CardsHandlerServerPart
 
                         #region ПОИСК
 
-                        
                         SearchType searchType =
                             (SearchType)Enum.Parse(
                                 typeof(SearchType),
                                 dataReceived.Split(';')[1]);
+
                         ResultOperations resultOperation;
+
                         switch (searchType)
                         {
                             case SearchType.ByPhone:
@@ -160,9 +161,9 @@ namespace CardsHandlerServerPart
                                 break;
                             case SearchType.ByCard:
 
-                                int.TryParse(dataReceived.Split(';')[2], out int cardNum);
+                                int.TryParse(dataReceived.Split(';')[2], out int cardNN);
 
-                                resultOperation = pgDB.FindCardByCard(out card, cardNum);
+                                resultOperation = pgDB.FindCardByCard(out card, cardNN);
 
                                 if (resultOperation == ResultOperations.None)
                                 {
@@ -185,9 +186,98 @@ namespace CardsHandlerServerPart
 
                     case CardsOperation.Change:
 
-                        #region СПИСАНИЕ
+                        #region ИЗМЕНЕНИЕ
 
-                        #endregion СПИСАНИЕ
+                        BonusOperations bonusOperations =
+                            (BonusOperations)Enum.Parse(
+                                typeof(BonusOperations),
+                                dataReceived.Split(';')[1]);
+
+                        int.TryParse(dataReceived.Split(';')[2], out int cardNum);
+                        int.TryParse(dataReceived.Split(';')[3], out int summ);
+
+                        switch (bonusOperations)
+                        {
+                            case BonusOperations.Add:
+                                resultOperation =
+                                    pgDB.AddBonus(out card, cardNum, summ);
+
+                                pgDB.FindCardByCard(out card, cardNum);
+                                switch (resultOperation)
+                                {
+                                    case ResultOperations.None:
+
+                                        json = JsonConvert.SerializeObject(card);
+
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+                                        break;
+
+                                    case ResultOperations.CardDoesnExist:
+
+                                        json = resultOperation.ToString();
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+                                        break;
+
+                                    case ResultOperations.CardExpired:
+
+                                        json = resultOperation.ToString();
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+
+                                        break;
+                                }
+
+                                break;
+                            case BonusOperations.Remove:
+
+                                resultOperation =
+                                    pgDB.Charge(out card, cardNum, summ);
+                                pgDB.FindCardByCard(out card, cardNum);
+                                switch (resultOperation)
+                                {
+                                    case ResultOperations.None:
+
+                                        json = JsonConvert.SerializeObject(card);
+
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+                                        break;
+
+                                    case ResultOperations.CardDoesnExist:
+
+                                        json = resultOperation.ToString();
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+                                        break;
+
+                                    case ResultOperations.CardExpired:
+
+                                        json = resultOperation.ToString();
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+                                        break;
+                                    case ResultOperations.ChargeError:
+
+                                        json = resultOperation.ToString();
+                                        responseData = Encoding.UTF8.GetBytes(
+                                        json.ToString().ToCharArray());
+                                        stream.Write(responseData, 0, responseData.Length);
+
+                                        break;
+                                }
+
+                                break;
+                        }
+
+                        #endregion ИЗМЕНЕНИЕ
 
                         break;
 
