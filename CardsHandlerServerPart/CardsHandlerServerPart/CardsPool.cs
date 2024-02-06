@@ -92,7 +92,7 @@ namespace CardsHandlerServerPart
             }
             else
             {
-                for (int i = startVol; i < PoolSixe + startVol; i++)
+                for (int i = startVol+1; i < PoolSixe + startVol; i++)
                 {
                     _poolCard.Add(i);
                 }
