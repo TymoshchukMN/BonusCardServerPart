@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -57,6 +58,12 @@ namespace CardsHandlerServerPart
             }
         }
 
+        /// <summary>
+        /// Ассинхронная обработка запросов от пользователя.
+        /// </summary>
+        /// <param name="cardsPoll"> Обект пула карт. </param>
+        /// <param name="client">TcpClient.</param>
+        /// <returns>Task.</returns>
         private static async Task ProcessClientRequest(CardsPool cardsPoll, TcpClient client)
         {
             NetworkStream stream = client.GetStream();
@@ -297,6 +304,19 @@ namespace CardsHandlerServerPart
                     stream.Write(responseData, 0, responseData.Length);
 
                     #endregion ПРОСМОТР БАЛАНСА
+
+                    break;
+                case CardsOperation.GetAllCards:
+
+                    #region ПРОСМОТР ВСЕХ КАРТ
+
+                    pgDB.GetAllCards(out DataTable dataTable);
+                    json = JsonConvert.SerializeObject(dataTable);
+
+                    byte[] data = Encoding.UTF8.GetBytes(json);
+                    stream.Write(data, 0, data.Length);
+
+                    #endregion ПРОСМОТР ВСЕХ КАРТ
 
                     break;
             }
