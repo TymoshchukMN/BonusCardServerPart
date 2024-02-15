@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,8 @@ namespace CardsHandlerServerPart
         /// Пулл номеро карт для выдачи.
         /// </summary>
         private List<int> _poolCard = new List<int>() { 0 };
+
+        ConcurrentQueue<int> concurrentQueue = new ConcurrentQueue<int>();
 
         /// <summary>
         /// Флаг свободен ли обработчик пула.
