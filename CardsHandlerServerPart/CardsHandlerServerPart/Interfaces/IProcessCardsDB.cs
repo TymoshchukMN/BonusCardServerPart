@@ -2,7 +2,7 @@
 
 namespace CardsHandlerServerPart.Interfaces
 {
-    internal interface IProcessCardsDB
+    public interface IDBProcessCard
     {
         bool CheckIfCardExist(int cardNumber);
 

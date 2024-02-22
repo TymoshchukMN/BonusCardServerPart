@@ -11,7 +11,7 @@ namespace CardsHandlerServerPart
     /// <summary>
     /// Ошибки.
     /// </summary>
-    internal enum ResultOperations : ushort
+    public enum ResultOperations : ushort
     {
         /// <summary>
         /// Значение по умолчанию.

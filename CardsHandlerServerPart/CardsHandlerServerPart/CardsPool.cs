@@ -10,14 +10,14 @@ namespace CardsHandlerServerPart
     /// <summary>
     /// Класс для обработки пула карт.
     /// </summary>
-    internal class CardsPool
+    public class CardsPool
     {
         #region FIELDS
 
         /// <summary>
         /// Размер пула.
         /// </summary>
-        private const int PoolSixe = 1000;
+        private const int PoolSize = 1000;
 
         /// <summary>
         /// Минимальный размер пула карт.
@@ -32,9 +32,7 @@ namespace CardsHandlerServerPart
         /// <summary>
         /// Пулл номеро карт для выдачи.
         /// </summary>
-        private List<int> _poolCard = new List<int>() { 0 };
-
-        ConcurrentQueue<int> concurrentQueue = new ConcurrentQueue<int>();
+        private ConcurrentQueue<int> _poolCard = new ConcurrentQueue<int>();
 
         /// <summary>
         /// Флаг свободен ли обработчик пула.
@@ -45,7 +43,6 @@ namespace CardsHandlerServerPart
 
         private CardsPool()
         {
-            _isBusy = false;
         }
 
         #region PROPERTIES
@@ -60,6 +57,14 @@ namespace CardsHandlerServerPart
             private set
             {
                 _isBusy = value;
+            }
+        }
+
+        public ConcurrentQueue<int> GetPoolCard
+        {
+            get
+            {
+                return _poolCard;
             }
         }
 
@@ -81,51 +86,53 @@ namespace CardsHandlerServerPart
             return _instance;
         }
 
-        /// <summary>
-        /// Заполнить пулл доступных номеров.
-        /// </summary>
-        /// <param name="startVol">
-        /// Первый доступный номер.
-        /// </param>
         public void FillPool(int startVol)
         {
             if (startVol == 0)
             {
-                startVol = 100000;
+                startVol = PoolSize;
             }
             else
             {
-                for (int i = startVol + 1; i < PoolSixe + startVol; i++)
+                for (int i = startVol + 1; i < PoolSize + startVol; i++)
                 {
-                    _poolCard.Add(i);
+                    _poolCard.Enqueue(i);
                 }
             }
         }
 
         /// <summary>
-        /// Получить номер карты.
-        /// </summary>
-        /// <returns>
-        /// номер карты.
+        /// Проверка размера пула. Если пулл мельньше минимального,
+        /// вызываем метод расширения.
         /// </returns>
-        public int GetCarNumber()
+        public async void CheckSizePool()
         {
-            // указываем, что генератор карт занят.
-            IsBusy = true;
-
-            int cardNumber = _poolCard[1];
-            _poolCard.Remove(cardNumber);
-
             if (_poolCard.Count <= MinPookSize)
             {
-                int nextVol = _poolCard.Max() + 1;
-
-                FillPool(nextVol);
+                await Expandpool(_poolCard);
             }
+        }
 
-            IsBusy = false;
+        /// <summary>
+        /// Расширение размера пула.
+        /// </summary>
+        /// <param name="poolCard">
+        /// Пул карт для расширения.
+        /// </param>
+        /// <returns>Task.</returns>
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        private static async Task Expandpool(ConcurrentQueue<int> poolCard)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+            int firstVolToAdd = poolCard.Last() + 1;
+            int currentQueueSize = poolCard.Count;
+            int targetQueueSize = poolCard.Count * 2;
 
-            return cardNumber;
+            for (int i = currentQueueSize; i < targetQueueSize; i++)
+            {
+                poolCard.Enqueue(firstVolToAdd);
+                ++firstVolToAdd;
+            }
         }
 
         #endregion METHODS

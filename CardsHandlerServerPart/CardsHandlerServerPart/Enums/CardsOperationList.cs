@@ -1,6 +1,6 @@
 ﻿namespace CardsHandlerServerPart.Enums
 {
-    public enum CardsOperation
+    public enum CardsOperationList
     {
         /// <summary>
         /// Значение по умолчанию.

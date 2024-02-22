@@ -7,7 +7,7 @@ using Npgsql;
 
 namespace CardsHandlerServerPart.Data
 {
-    internal class PostgresDB : IDisposable, IGetLastFreeValue, IProcessCardsDB
+    internal class PostgresDB : IDisposable, IGetLastFreeValue, IDBProcessCard
     {
         #region FIELDS
 

@@ -8,7 +8,7 @@
 
 namespace CardsHandlerServerPart.Enums
 {
-    internal enum SearchType
+    public enum SearchType
     {
         /// <summary>
         /// Значение по умолчанию.

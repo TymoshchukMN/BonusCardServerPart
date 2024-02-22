@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <NoWarn>SA1633;SA0001;SA1309;SA1101;SA1600;SA1200;SA1601;SA1124;SA1123</NoWarn>
+    <NoWarn>SA1633;SA0001;SA1309;SA1101;SA1600;SA1200;SA1601;SA1124;SA1123;SA1998</NoWarn>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -108,24 +108,33 @@
     <Compile Include="BL.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="CardsPool.cs" />
+    <Compile Include="FabricElements\ChangeCard.cs" />
     <Compile Include="Configs\SrvConfig.cs" />
+    <Compile Include="FabricElements\CommandFactory.cs" />
+    <Compile Include="FabricElements\CreateCard.cs" />
     <Compile Include="Data\PostgresDB.cs" />
     <Compile Include="Configs\DBConfig.cs" />
     <Compile Include="Enums\BonusOperations.cs" />
-    <Compile Include="Enums\CardsOperation.cs" />
+    <Compile Include="Enums\CardsOperationList.cs" />
     <Compile Include="Enums\ResultOperations.cs" />
     <Compile Include="Enums\SearchType.cs" />
+    <Compile Include="FabricElements\FindCard.cs" />
+    <Compile Include="FabricElements\GetAllCards.cs" />
+    <Compile Include="FabricElements\GetBalanceCard.cs" />
     <Compile Include="Interfaces\IGetLastFreeValue.cs" />
     <Compile Include="Interfaces\IProcessCardsDB.cs" />
+    <Compile Include="Interfaces\IProcessCard.cs" />
     <Compile Include="JSON\CreateCardConfig.cs" />
     <Compile Include="JSON\CreateCardFilds.cs" />
     <Compile Include="JSON\DBConfigJSON.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Starter.cs" />
+    <Compile Include="StreamProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ using System;
 
 namespace CardsHandlerServerPart
 {
-    internal class Card
+    public class Card
     {
         private const int DefaultSumm = 1000;
 

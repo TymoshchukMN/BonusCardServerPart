@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Concurrent;
+using System.IO;
 using CardsHandlerServerPart.Configs;
 using CardsHandlerServerPart.JSON;
 using Newtonsoft.Json;
@@ -41,6 +42,22 @@ namespace CardsHandlerServerPart
             CreateCardConfig srvConfigJSON = JsonConvert.DeserializeObject<CreateCardConfig>(srvConfigFile);
 
             return srvConfigJSON;
+        }
+
+        public static void FillPool(int startVol, ConcurrentQueue<int> pool)
+        {
+            const int PoolSixe = 10000;
+            if (startVol == 0)
+            {
+                startVol = 100000;
+            }
+            else
+            {
+                for (int i = startVol + 1; i < PoolSixe + startVol; i++)
+                {
+                    pool.Enqueue(i);
+                }
+            }
         }
     }
 }
