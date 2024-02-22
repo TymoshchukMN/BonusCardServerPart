@@ -9,7 +9,7 @@ namespace CardsHandlerServerPart
 {
     public class ChangeCard : IProcessCard
     {
-        public void ProcessCard(StreamProcessor streamProcessor)
+        public void ProcessCard(ref StreamProcessor streamProcessor)
         {
             string dataReceived = streamProcessor.GetReceivedData();
 

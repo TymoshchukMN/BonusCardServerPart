@@ -7,7 +7,7 @@ namespace CardsHandlerServerPart
 {
     public class GetAllCards : IProcessCard
     {
-        public void ProcessCard(StreamProcessor streamProcessor)
+        public void ProcessCard(ref StreamProcessor streamProcessor)
         {
             IDBProcessCard pgDB = PostgresDB.GetInstance();
             pgDB.GetAllCards(out DataTable dataTable);

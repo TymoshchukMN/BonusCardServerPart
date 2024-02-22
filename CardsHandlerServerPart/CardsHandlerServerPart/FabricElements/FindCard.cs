@@ -8,7 +8,7 @@ namespace CardsHandlerServerPart
 {
     public class FindCard : IProcessCard
     {
-        public void ProcessCard(StreamProcessor streamProcessor)
+        public void ProcessCard(ref StreamProcessor streamProcessor)
         {
             string dataReceived = streamProcessor.GetReceivedData();
 

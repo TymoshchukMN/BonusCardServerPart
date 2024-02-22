@@ -8,7 +8,7 @@ namespace CardsHandlerServerPart
 {
     public class CreateCard : IProcessCard
     {
-        public void ProcessCard(StreamProcessor streamProcessor)
+        public void ProcessCard(ref StreamProcessor streamProcessor)
         {
             CardsPool cardsPoll = CardsPool.GetInstance();
 

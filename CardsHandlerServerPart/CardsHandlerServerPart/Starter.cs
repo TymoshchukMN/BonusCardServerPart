@@ -64,21 +64,20 @@ namespace CardsHandlerServerPart
             await Task.Run(() =>
             {
                 CardsPool cardsPoll = CardsPool.GetInstance();
-                using (StreamProcessor streamProcessor = new StreamProcessor(client))
-                {
-                    string dataReceived = streamProcessor.GetReceivedData();
-                    Console.WriteLine($"Получено от клиента: {dataReceived}");
 
-                    CardsOperationList cardOperation =
-                        (CardsOperationList)Enum.Parse(
-                            typeof(CardsOperationList),
-                            dataReceived.Split(';')[0]);
+                StreamProcessor streamProcessor = new StreamProcessor(client);
+                string dataReceived = streamProcessor.GetReceivedData();
+                Console.WriteLine($"Получено от клиента: {dataReceived}");
 
-                    IDBProcessCard pgDB = PostgresDB.GetInstance();
-                    IProcessCard processCard = CommandFactory.GetCommand(cardOperation);
+                CardsOperationList cardOperation =
+                    (CardsOperationList)Enum.Parse(
+                        typeof(CardsOperationList),
+                        dataReceived.Split(';')[0]);
 
-                    processCard.ProcessCard(streamProcessor);
-                }
+                IDBProcessCard pgDB = PostgresDB.GetInstance();
+                IProcessCard processCard = CommandFactory.GetCommand(cardOperation);
+
+                processCard.ProcessCard(ref streamProcessor);
 
                 client.Close();
             });

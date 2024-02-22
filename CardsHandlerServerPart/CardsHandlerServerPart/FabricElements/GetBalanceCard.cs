@@ -6,7 +6,7 @@ namespace CardsHandlerServerPart
 {
     public class GetBalanceCard : IProcessCard
     {
-        public void ProcessCard(StreamProcessor streamProcessor)
+        public void ProcessCard(ref StreamProcessor streamProcessor)
         {
             IDBProcessCard pgDB = PostgresDB.GetInstance();
             int.TryParse(streamProcessor.GetReceivedData().Split(';')[1], out int cardN);
