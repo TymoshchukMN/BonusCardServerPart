@@ -121,8 +121,8 @@
     <Compile Include="FabricElements\FindCard.cs" />
     <Compile Include="FabricElements\GetAllCards.cs" />
     <Compile Include="FabricElements\GetBalanceCard.cs" />
+    <Compile Include="Interfaces\IDBProcessCard.cs" />
     <Compile Include="Interfaces\IGetLastFreeValue.cs" />
-    <Compile Include="Interfaces\IProcessCardsDB.cs" />
     <Compile Include="Interfaces\IProcessCard.cs" />
     <Compile Include="JSON\CreateCardConfig.cs" />
     <Compile Include="JSON\CreateCardFilds.cs" />

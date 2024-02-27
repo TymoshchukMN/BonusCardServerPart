@@ -1,6 +1,6 @@
 ﻿namespace CardsHandlerServerPart.Configs
 {
-    internal class SrvConfig
+    internal class SqlSrvConfig
     {
         public string Server { get; set; }
 

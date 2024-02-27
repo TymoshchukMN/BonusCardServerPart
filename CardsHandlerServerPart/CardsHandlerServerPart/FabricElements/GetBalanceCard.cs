@@ -8,8 +8,11 @@ namespace CardsHandlerServerPart
     {
         public void ProcessCard(ref StreamProcessor streamProcessor)
         {
+            const int IndexCardPosiition = 2;
             IDBProcessCard pgDB = PostgresDB.GetInstance();
-            int.TryParse(streamProcessor.GetReceivedData().Split(';')[1], out int cardN);
+            int.TryParse(
+                streamProcessor.GetReceivedData().Split(';')[IndexCardPosiition],
+                out int cardN);
 
             ResultOperations resultOperation =
                 pgDB.FindCardByCard(out Card card, cardN);

@@ -27,11 +27,11 @@ namespace CardsHandlerServerPart
         ///  Получить конфиг подключениея к серверу.
         /// </summary>
         /// <returns>конфиг подключениея к серверу</returns>
-        public static SrvConfig GetServerConfig()
+        public static SqlSrvConfig GetServerConfig()
         {
             const string ConfFilePathSRV = @"\\172.16.112.40\share\TymoshchukMN\SRVconfigFile.json";
             string srvConfigFile = File.ReadAllText(ConfFilePathSRV);
-            SrvConfig srvConfigJSON = JsonConvert.DeserializeObject<SrvConfig>(srvConfigFile);
+            SqlSrvConfig srvConfigJSON = JsonConvert.DeserializeObject<SqlSrvConfig>(srvConfigFile);
 
             return srvConfigJSON;
         }

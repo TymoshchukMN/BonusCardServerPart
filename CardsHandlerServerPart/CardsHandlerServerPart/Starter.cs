@@ -36,12 +36,15 @@ namespace CardsHandlerServerPart
         /// </summary>
         public static void StartServer()
         {
-            SrvConfig srvConfig = BL.GetServerConfig();
+            SqlSrvConfig sqlSrvConfig = BL.GetServerConfig();
 
-            int port = srvConfig.Port;
-            string serverAddress = srvConfig.Server;
+            int port = sqlSrvConfig.Port;
+            string sqlServerAddress = sqlSrvConfig.Server;
 
-            IPAddress ipAddress = IPAddress.Parse(serverAddress);
+            // int port = 49001;
+            // string serverAddress = "127.0.0.1";
+
+            IPAddress ipAddress = IPAddress.Parse(sqlServerAddress);
             TcpListener listener = new TcpListener(ipAddress, port);
             listener.Start();
             Console.WriteLine("Сервер запущен...");
