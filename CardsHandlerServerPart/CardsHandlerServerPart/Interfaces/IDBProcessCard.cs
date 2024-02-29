@@ -4,9 +4,9 @@ namespace CardsHandlerServerPart.Interfaces
 {
     public interface IDBProcessCard
     {
-        bool CheckIfCardExist(int cardNumber);
+        // bool CheckIfCardExist(int cardNumber);
 
-        bool CheckIfPhone(string phoneNumber);
+        // bool CheckIfPhone(string phoneNumber);
 
         void CreateCard(Card card);
 

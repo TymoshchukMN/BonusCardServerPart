@@ -109,7 +109,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="CardsPool.cs" />
     <Compile Include="Configs\MSDBconfig.cs" />
-    <Compile Include="Data\MSsql.cs" />
+    <Compile Include="Data\MSSQLInstance.cs" />
     <Compile Include="FabricElements\ChangeCard.cs" />
     <Compile Include="Configs\SrvConfig.cs" />
     <Compile Include="FabricElements\CommandFactory.cs" />

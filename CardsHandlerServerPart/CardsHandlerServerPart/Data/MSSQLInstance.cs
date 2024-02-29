@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CardsHandlerServerPart.Configs;
 using CardsHandlerServerPart.Interfaces;
-using CardsHandlerServerPart.JSON;
 using Dapper;
 using Newtonsoft.Json;
 
@@ -20,6 +14,11 @@ namespace CardsHandlerServerPart.Data
 
         private const string ConfFilePathDB = @"\\172.16.112.40\share\TymoshchukMN\MSDBconfigFile.json";
         private const string ProcGetMinNumber = "GET_MIN_AVAILABLE_CARD_NUM";
+        private const string ProcCreateCard = "CREATE_USER";
+        private const string ProcAddBonuses = "ADD_BONUSES";
+        private const string ProcRemoveBonuses = "REMOVE_BONUSES";
+        private const string ProcGetCard = "FIND_CARD_BY_CARDNUM";
+
         private static MSSQLInstance _instance;
         private readonly SqlConnection _connection;
         private string _connectionString;
@@ -27,35 +26,6 @@ namespace CardsHandlerServerPart.Data
         #endregion FIELDS
 
         #region CTORs
-
-        private MSSQLInstance(
-            string server,
-            string userName,
-            string dataBase,
-            int port,
-            string pass)
-        {
-            _connectionString =
-                $"Server={server};Database={dataBase};User Id={userName};Password={pass};";
-
-            _connection = new SqlConnection(_connectionString);
-
-            try
-            {
-                _connection.Open();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        ~MSSQLInstance()
-        {
-            _connection.Close();
-        }
-
-        #endregion CTORs
 
         private MSSQLInstance(string connectionString)
         {
@@ -70,6 +40,15 @@ namespace CardsHandlerServerPart.Data
             {
                 throw;
             }
+        }
+
+        #endregion CTORs
+
+        #region SERVICE
+
+        ~MSSQLInstance()
+        {
+            _connection.Close();
         }
 
         public static MSSQLInstance GetInstance()
@@ -96,29 +75,22 @@ namespace CardsHandlerServerPart.Data
             _connection.Close();
         }
 
-        public ResultOperations AddBonus(out Card card, int cardNum, int summ)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ResultOperations Charge(out Card card, int cardNum, int summ)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CheckIfCardExist(int cardNumber)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool CheckIfPhone(string phoneNumber)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion SERVICE
 
         public void CreateCard(Card card)
         {
-            throw new NotImplementedException();
+            var param = new DynamicParameters();
+            param.Add("@cardnumber", card.Cardnumber, DbType.Int32, ParameterDirection.Input);
+            param.Add("@expirationDate", card.ExpirationDate, DbType.Date, ParameterDirection.Input);
+            param.Add("@ballance", card.Ballance, DbType.Int32, ParameterDirection.Input);
+            param.Add("@firstName", card.FirstName, DbType.String, ParameterDirection.Input);
+            param.Add("@middleName", card.MiddleName, DbType.String, ParameterDirection.Input);
+            param.Add("@lastName", card.LastName, DbType.String, ParameterDirection.Input);
+            param.Add("@phoneNumber",card.PhoneNumber, DbType.String, ParameterDirection.Input);
+
+            _connection.Query<Card>(ProcCreateCard, param, commandType: CommandType.StoredProcedure);
+
+            Console.ReadKey();
         }
 
         public ResultOperations FindCardByCard(out Card card, int number)
@@ -141,23 +113,43 @@ namespace CardsHandlerServerPart.Data
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Получение последнего доступного номера карты.
+        /// </summary>
+        /// <param name="lastFreeVol"></param>
         public void GetLastFreeValue(out int lastFreeVol)
         {
-            // минимальный номер карты
-            const int minVol = 100000;
-
-            int gottenMinCardNumber = _connection.QueryFirstOrDefault<int>(
+            lastFreeVol = _connection.QueryFirstOrDefault<int>(
                 ProcGetMinNumber,
                 commandType: CommandType.StoredProcedure);
+        }
 
-            if (gottenMinCardNumber == 0)
+        public ResultOperations AddBonus(out Card card, int cardNum, int summ)
+        {
+            card = null;
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@cardNumber", cardNum, DbType.Int32, ParameterDirection.Input);
+            parameters.Add("@SUM", summ, DbType.Int32, ParameterDirection.Input);
+
+            ResultOperations resultOperations =
+                (ResultOperations)_connection.QueryFirstOrDefault<int>(
+                    ProcAddBonuses, parameters, commandType: CommandType.StoredProcedure);
+
+            if (resultOperations == ResultOperations.None)
             {
-                lastFreeVol = minVol;
+                parameters = new DynamicParameters();
+                parameters.Add("@cardNumber", cardNum, DbType.Int32, ParameterDirection.Input);
+                card = _connection.QueryFirst<Card>(
+                    ProcGetCard, parameters, commandType: CommandType.StoredProcedure);
             }
-            else
-            {
-                lastFreeVol = gottenMinCardNumber;
-            }
+
+            return resultOperations;
+        }
+
+        public ResultOperations Charge(out Card card, int cardNum, int summ)
+        {
+            throw new NotImplementedException();
         }
     }
 }

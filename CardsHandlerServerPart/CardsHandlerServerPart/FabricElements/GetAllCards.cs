@@ -7,10 +7,10 @@ namespace CardsHandlerServerPart
 {
     public class GetAllCards : IProcessCard
     {
-        public void ProcessCard(ref StreamProcessor streamProcessor)
+        public void ProcessCard(
+            ref StreamProcessor streamProcessor, IDBProcessCard sqlInstance)
         {
-            IDBProcessCard pgDB = PostgresDB.GetInstance();
-            pgDB.GetAllCards(out DataTable dataTable);
+            sqlInstance.GetAllCards(out DataTable dataTable);
             streamProcessor.SendDataToUser(JsonConvert.SerializeObject(dataTable));
         }
     }

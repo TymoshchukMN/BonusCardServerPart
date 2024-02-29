@@ -9,11 +9,11 @@ namespace CardsHandlerServerPart
 {
     public class ChangeCard : IProcessCard
     {
-        public void ProcessCard(ref StreamProcessor streamProcessor)
+        public void ProcessCard(
+            ref StreamProcessor streamProcessor, IDBProcessCard sqlInstance)
         {
             string dataReceived = streamProcessor.GetReceivedData();
 
-            IDBProcessCard pgDB = PostgresDB.GetInstance();
             BonusOperations bonusOperations =
                 (BonusOperations)Enum.Parse(
                     typeof(BonusOperations),
@@ -26,9 +26,9 @@ namespace CardsHandlerServerPart
             {
                 case BonusOperations.Add:
                     ResultOperations resultOperation =
-                        pgDB.AddBonus(out Card card, cardNum, summ);
+                        sqlInstance.AddBonus(out Card card, cardNum, summ);
 
-                    pgDB.FindCardByCard(out card, cardNum);
+                    //pgDB.FindCardByCard(out card, cardNum);
 
                     if (resultOperation == ResultOperations.None)
                     {
@@ -45,8 +45,8 @@ namespace CardsHandlerServerPart
                 case BonusOperations.Remove:
 
                     resultOperation =
-                        pgDB.Charge(out card, cardNum, summ);
-                    pgDB.FindCardByCard(out card, cardNum);
+                        sqlInstance.Charge(out card, cardNum, summ);
+                    sqlInstance.FindCardByCard(out card, cardNum);
 
                     if (resultOperation == ResultOperations.None)
                     {

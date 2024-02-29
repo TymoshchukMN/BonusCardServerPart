@@ -8,7 +8,8 @@ namespace CardsHandlerServerPart
 {
     public class FindCard : IProcessCard
     {
-        public void ProcessCard(ref StreamProcessor streamProcessor)
+        public void ProcessCard(
+            ref StreamProcessor streamProcessor, IDBProcessCard sqlInstance)
         {
             string dataReceived = streamProcessor.GetReceivedData();
 
@@ -19,20 +20,19 @@ namespace CardsHandlerServerPart
 
             ResultOperations resultOperation = ResultOperations.None;
 
-            IDBProcessCard pgDB = PostgresDB.GetInstance();
             string json = string.Empty;
             Card card = null;
             switch (searchType)
             {
                 case SearchType.ByPhone:
                     string phone = dataReceived.Split(';')[2];
-                    resultOperation = pgDB.FindCardByPhone(out card, phone);
+                    resultOperation = sqlInstance.FindCardByPhone(out card, phone);
 
                     break;
                 case SearchType.ByCard:
 
                     int.TryParse(dataReceived.Split(';')[2], out int cardNN);
-                    resultOperation = pgDB.FindCardByCard(out card, cardNN);
+                    resultOperation = sqlInstance.FindCardByCard(out card, cardNN);
 
                     break;
             }

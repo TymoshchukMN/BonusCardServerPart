@@ -2,6 +2,8 @@
 {
     public interface IProcessCard
     {
-        void ProcessCard(ref StreamProcessor streamProcessor);
+        void ProcessCard(
+            ref StreamProcessor streamProcessor,
+            IDBProcessCard sqlInstance);
     }
 }

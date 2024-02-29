@@ -31,13 +31,13 @@ namespace CardsHandlerServerPart
         /// </summary>
         public static void StartServer()
         {
-            SqlSrvConfig sqlSrvConfig = BL.GetServerConfig();
+            //SqlSrvConfig sqlSrvConfig = BL.GetServerConfig();
 
-            int port = sqlSrvConfig.Port;
-            string sqlServerAddress = sqlSrvConfig.Server;
+            //int port = sqlSrvConfig.Port;
+            //string sqlServerAddress = sqlSrvConfig.Server;
 
-            // int port = 49001;
-            // string serverAddress = "127.0.0.1";
+            int port = 49001;
+            string sqlServerAddress = "127.0.0.1";
 
             IPAddress ipAddress = IPAddress.Parse(sqlServerAddress);
             TcpListener listener = new TcpListener(ipAddress, port);
@@ -72,10 +72,11 @@ namespace CardsHandlerServerPart
                         typeof(CardsOperationList),
                         dataReceived.Split(';')[0]);
 
-                IDBProcessCard pgDB = PostgresDB.GetInstance();
+                IDBProcessCard sqlInstance = MSSQLInstance.GetInstance();
+
                 IProcessCard processCard = CommandFactory.GetCommand(cardOperation);
 
-                processCard.ProcessCard(ref streamProcessor);
+                processCard.ProcessCard(ref streamProcessor, sqlInstance);
 
                 client.Close();
             });

@@ -8,7 +8,8 @@ namespace CardsHandlerServerPart
 {
     public class CreateCard : IProcessCard
     {
-        public void ProcessCard(ref StreamProcessor streamProcessor)
+        public void ProcessCard(
+            ref StreamProcessor streamProcessor, IDBProcessCard sqlInstance)
         {
             CardsPool cardsPoll = CardsPool.GetInstance();
 
@@ -43,8 +44,7 @@ namespace CardsHandlerServerPart
                         firstName,
                         middleName,
                         lastName);
-            IDBProcessCard pgDB = PostgresDB.GetInstance();
-            pgDB.CreateCard(card);
+            sqlInstance.CreateCard(card);
 
             streamProcessor.SendDataToUser(JsonConvert.SerializeObject(card));
         }

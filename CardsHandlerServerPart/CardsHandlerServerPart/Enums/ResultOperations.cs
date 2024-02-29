@@ -16,66 +16,66 @@ namespace CardsHandlerServerPart
         /// <summary>
         /// Значение по умолчанию.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// Не верный телеон.
         /// </summary>
-        WrongPhone,
+        WrongPhone = 1,
 
         /// <summary>
         /// Телефон не существует.
         /// </summary>
-        PhoneDoesnEsixt,
+        PhoneDoesnEsixt = 2,
 
         /// <summary>
         /// не верный номер карты.
         /// </summary>
-        WrongCard,
+        WrongCard = 3,
 
         /// <summary>
         /// Карта не существует.
         /// </summary>
-        CardDoesnExist,
+        CardDoesnExist = 4,
 
         /// <summary>
         /// Не верное имя.
         /// </summary>
-        WrongName,
+        WrongName = 5,
 
         /// <summary>
         /// Данные не заполнены.
         /// </summary>
-        EmptyField,
+        EmptyField = 6,
 
         /// <summary>
         /// Не верная сумма.
         /// </summary>
-        WrongSumm,
+        WrongSumm = 7,
 
         /// <summary>
         /// Ошибка списания.
         /// </summary>
-        ChargeError,
+        ChargeError = 8,
 
         /// <summary>
         /// Отрицательное число.
         /// </summary>
-        NegativeDigit,
+        NegativeDigit = 9,
 
         /// <summary>
         /// Срок действия карты истек.
         /// </summary>
-        CardExpired,
+        CardExpired = 10,
 
         /// <summary>
         /// Не выбрано что сделать.
         /// </summary>
-        NotChangedWhatToDo,
+        NotChangedWhatToDo = 11,
 
         /// <summary>
         /// Не удалось подключиться к БД.
         /// </summary>
-        CannontConnectToDB,
+        CannontConnectToDB = 12,
     }
 }
