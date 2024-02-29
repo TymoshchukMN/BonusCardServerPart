@@ -118,8 +118,6 @@ namespace CardsHandlerServerPart.Data
             data.Close();
         }
 
-        #region COPIED
-
         /// <summary>
         /// Проверяем естьли карты с таким номером.
         /// </summary>
@@ -493,6 +491,5 @@ namespace CardsHandlerServerPart.Data
                     sqlCommand,
                     new { cardNum = cardNum });
         }
-        #endregion COPIED
     }
 }

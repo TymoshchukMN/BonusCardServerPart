@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -7,7 +8,6 @@ using CardsHandlerServerPart.Data;
 using CardsHandlerServerPart.Enums;
 using CardsHandlerServerPart.FabricElements;
 using CardsHandlerServerPart.Interfaces;
-using CardsHandlerServerPart.JSON;
 
 namespace CardsHandlerServerPart
 {
@@ -16,14 +16,9 @@ namespace CardsHandlerServerPart
         public static void Run()
         {
             CardsPool cardsPoll = CardsPool.GetInstance();
-            DBConfigJSON dBConfig = BL.GetDBConfig();
 
-            IGetLastFreeValue pgDB = PostgresDB.GetInstance(
-               dBConfig.DBConfig.Server,
-               dBConfig.DBConfig.UserName,
-               dBConfig.DBConfig.DBname,
-               dBConfig.DBConfig.Port);
-            pgDB.GetLastFreeValue(out int lastFreeVol);
+            MSSQLInstance sqlInstance = MSSQLInstance.GetInstance();
+            sqlInstance.GetLastFreeValue(out int lastFreeVol);
 
             cardsPoll.FillPool(lastFreeVol);
 
