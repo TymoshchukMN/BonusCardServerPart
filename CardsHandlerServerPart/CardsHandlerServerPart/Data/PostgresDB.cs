@@ -184,7 +184,7 @@ namespace CardsHandlerServerPart.Data
         /// <param name="card">
         /// объект класса бонусной карты.
         /// </param>
-        public void CreateCard(Card card)
+        public void CreateCard(ref Card card)
         {
             DateTime expirationDate = DateTime.Today.AddMonths(12).Date;
 
@@ -226,18 +226,18 @@ namespace CardsHandlerServerPart.Data
         /// <param name="card">Карта.</param>
         /// <param name="number">номер телефона/карты.</param>
         /// <returns>Объект карты.</returns>
-        public ResultOperations FindCardByPhone(out Card card, string number)
+        public ResultOperations FindCardByPhone(out DataTable dataTable, string number)
         {
             ResultOperations resultOperations = ResultOperations.None;
 
-            card = new Card();
-
+            // card = new Card();
+            dataTable = new DataTable();
             if (CheckIfPhone(number))
             {
                 string sqlCommand = $"SELECT * FROM cards WHERE \"phoneNumber\" = @phone";
 
                 IEnumerable<Card> results = _connection.Query<Card>(sqlCommand, new { phone = number });
-                FillCard(ref card, ref results);
+                //FillCard(ref card, ref results);
             }
             else
             {
@@ -253,7 +253,7 @@ namespace CardsHandlerServerPart.Data
         /// <param name="card">Карта.</param>
         /// <param name="number">карты.</param>
         /// <returns>Объект карты.</returns>
-        public ResultOperations FindCardByCard(out Card card, int number)
+        public ResultOperations FindCardByCardNum(out Card card, int number)
         {
             ResultOperations resultOperations = ResultOperations.None;
 
@@ -375,16 +375,9 @@ namespace CardsHandlerServerPart.Data
             return resultOperations;
         }
 
-        /// <summary>
-        /// Получить все карты.
-        /// </summary>
-        /// <param name="dataTable">Таблица с данными.</param>
-        /// <returns>Таблица с картами.</returns>
-        public ResultOperations GetAllCards(out DataTable dataTable)
+        public DataTable GetAllCards()
         {
-            ResultOperations resultOperations = ResultOperations.None;
-
-            dataTable = new DataTable();
+            DataTable dataTable = new DataTable();
 
             string sqlCommand =
                     $"SELECT * FROM cards;";
@@ -414,7 +407,7 @@ namespace CardsHandlerServerPart.Data
                     item.PhoneNumber);
             }
 
-            return resultOperations;
+            return dataTable;
         }
 
         /// <summary>
@@ -490,6 +483,11 @@ namespace CardsHandlerServerPart.Data
                 _connection.Query<Card>(
                     sqlCommand,
                     new { cardNum = cardNum });
+        }
+
+        public ResultOperations FindCardByPhone(out Card card, string number)
+        {
+            throw new NotImplementedException();
         }
     }
 }

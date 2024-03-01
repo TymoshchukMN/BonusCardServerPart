@@ -49,6 +49,8 @@ namespace CardsHandlerServerPart
         /// </summary>
         private string _ownerLastName;
 
+        private bool _isActive;
+
         #region CTORs
 
         /// <summary>
@@ -104,7 +106,8 @@ namespace CardsHandlerServerPart
             string phone,
             string firstName,
             string middleName,
-            string lasName)
+            string lasName,
+            bool isActive)
         {
             _number = number;
             _phoneNumber = phone;
@@ -113,6 +116,7 @@ namespace CardsHandlerServerPart
             _ownerFirstName = firstName;
             _ownerMiddleName = middleName;
             _ownerLastName = lasName;
+            _isActive = isActive;
         }
 
         public Card(
@@ -133,8 +137,27 @@ namespace CardsHandlerServerPart
             _phoneNumber = phoneNumber;
         }
 
-        #endregion CTORs
+        public Card(
+            int cardnumber,
+            DateTime expirationDate,
+            int ballance,
+            string firstName,
+            string middleName,
+            string lastName,
+            string phoneNumber,
+            bool isActive)
+        {
+            _number = cardnumber;
+            _expirationDate = expirationDate;
+            _ballance = ballance;
+            _ownerFirstName = firstName;
+            _ownerMiddleName = middleName;
+            _ownerLastName = lastName;
+            _phoneNumber = phoneNumber;
+            _isActive = isActive;
+        }
 
+        #endregion CTORs
         public int Cardnumber
         {
             get { return _number; }
@@ -176,5 +199,12 @@ namespace CardsHandlerServerPart
             get { return _ownerLastName; }
             set { _ownerLastName = value; }
         }
+
+        public bool ActivityFlag
+        {
+            get { return _isActive; }
+            set { _isActive = value; }
+        }
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using CardsHandlerServerPart.Data;
 using CardsHandlerServerPart.Interfaces;
 using Newtonsoft.Json;
 
@@ -43,8 +42,9 @@ namespace CardsHandlerServerPart
                         phoneNumber,
                         firstName,
                         middleName,
-                        lastName);
-            sqlInstance.CreateCard(card);
+                        lastName,
+                        true);
+            sqlInstance.CreateCard(ref card);
 
             streamProcessor.SendDataToUser(JsonConvert.SerializeObject(card));
         }

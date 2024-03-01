@@ -8,17 +8,17 @@ namespace CardsHandlerServerPart.Interfaces
 
         // bool CheckIfPhone(string phoneNumber);
 
-        void CreateCard(Card card);
+        void CreateCard(ref Card card);
 
         ResultOperations FindCardByPhone(out Card card, string number);
 
-        ResultOperations FindCardByCard(out Card card, int number);
+        ResultOperations FindCardByCardNum(out Card card, int number);
 
         ResultOperations Charge(out Card card, int cardNum, int summ);
 
         ResultOperations AddBonus(out Card card, int cardNum, int summ);
 
-        ResultOperations GetAllCards(out DataTable dataTable);
+        DataTable GetAllCards();
 
         ResultOperations GetExpiredCards(out DataTable dataTable);
     }

@@ -10,8 +10,9 @@ namespace CardsHandlerServerPart
         public void ProcessCard(
             ref StreamProcessor streamProcessor, IDBProcessCard sqlInstance)
         {
-            sqlInstance.GetAllCards(out DataTable dataTable);
-            streamProcessor.SendDataToUser(JsonConvert.SerializeObject(dataTable));
+            DataTable dataTable = sqlInstance.GetAllCards();
+            streamProcessor.SendDataToUser(
+                JsonConvert.SerializeObject(dataTable));
         }
     }
 }

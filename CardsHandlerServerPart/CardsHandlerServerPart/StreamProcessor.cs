@@ -32,9 +32,6 @@ namespace CardsHandlerServerPart
 
         public string GetReceivedData()
         {
-            //int bytesRead = _stream.Read(_buffer, 0, _buffer.Length);
-
-            //return Encoding.UTF8.GetString(_buffer, 0, bytesRead);
             return _receivedData;
         }
 

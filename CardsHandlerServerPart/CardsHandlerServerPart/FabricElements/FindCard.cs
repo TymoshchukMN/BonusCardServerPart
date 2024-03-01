@@ -1,5 +1,4 @@
 ﻿using System;
-using CardsHandlerServerPart.Data;
 using CardsHandlerServerPart.Enums;
 using CardsHandlerServerPart.Interfaces;
 using Newtonsoft.Json;
@@ -32,7 +31,7 @@ namespace CardsHandlerServerPart
                 case SearchType.ByCard:
 
                     int.TryParse(dataReceived.Split(';')[2], out int cardNN);
-                    resultOperation = sqlInstance.FindCardByCard(out card, cardNN);
+                    resultOperation = sqlInstance.FindCardByCardNum(out card, cardNN);
 
                     break;
             }
@@ -40,7 +39,7 @@ namespace CardsHandlerServerPart
             if (resultOperation == ResultOperations.None)
             {
                 streamProcessor.SendDataToUser(
-                    JsonConvert.SerializeObject(card));
+                           JsonConvert.SerializeObject(card));
             }
             else
             {

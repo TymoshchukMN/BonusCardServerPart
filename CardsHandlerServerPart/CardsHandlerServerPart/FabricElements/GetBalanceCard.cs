@@ -15,7 +15,7 @@ namespace CardsHandlerServerPart
                 out int cardN);
 
             ResultOperations resultOperation =
-                sqlInstance.FindCardByCard(out Card card, cardN);
+                sqlInstance.FindCardByCardNum(out Card card, cardN);
 
             if (resultOperation == ResultOperations.None)
             {

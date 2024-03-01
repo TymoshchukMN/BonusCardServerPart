@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net.Sockets;
-using CardsHandlerServerPart.Data;
 using CardsHandlerServerPart.Enums;
 using CardsHandlerServerPart.Interfaces;
 using Newtonsoft.Json;
@@ -28,8 +26,6 @@ namespace CardsHandlerServerPart
                     ResultOperations resultOperation =
                         sqlInstance.AddBonus(out Card card, cardNum, summ);
 
-                    //pgDB.FindCardByCard(out card, cardNum);
-
                     if (resultOperation == ResultOperations.None)
                     {
                         streamProcessor.SendDataToUser(
@@ -46,7 +42,7 @@ namespace CardsHandlerServerPart
 
                     resultOperation =
                         sqlInstance.Charge(out card, cardNum, summ);
-                    sqlInstance.FindCardByCard(out card, cardNum);
+                    // sqlInstance.FindCardByCard(out card, cardNum);
 
                     if (resultOperation == ResultOperations.None)
                     {
