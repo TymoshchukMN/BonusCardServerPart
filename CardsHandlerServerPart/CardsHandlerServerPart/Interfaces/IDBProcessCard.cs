@@ -4,22 +4,16 @@ namespace CardsHandlerServerPart.Interfaces
 {
     public interface IDBProcessCard
     {
-        // bool CheckIfCardExist(int cardNumber);
+        DataTable CreateCard(Card card);
 
-        // bool CheckIfPhone(string phoneNumber);
+        ResultOperations FindCardByPhone(out DataTable dataTable, string number);
 
-        void CreateCard(ref Card card);
+        ResultOperations FindCardByCardNum(out DataTable dataTable, int number);
 
-        ResultOperations FindCardByPhone(out Card card, string number);
+        ResultOperations AddBonus(out DataTable card, int cardNum, int summ);
 
-        ResultOperations FindCardByCardNum(out Card card, int number);
-
-        ResultOperations Charge(out Card card, int cardNum, int summ);
-
-        ResultOperations AddBonus(out Card card, int cardNum, int summ);
+        ResultOperations Charge(out DataTable card, int cardNum, int summ);
 
         DataTable GetAllCards();
-
-        ResultOperations GetExpiredCards(out DataTable dataTable);
     }
 }

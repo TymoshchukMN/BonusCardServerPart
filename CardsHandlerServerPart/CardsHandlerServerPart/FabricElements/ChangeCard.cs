@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using CardsHandlerServerPart.Enums;
 using CardsHandlerServerPart.Interfaces;
 using Newtonsoft.Json;
@@ -16,46 +17,41 @@ namespace CardsHandlerServerPart
                 (BonusOperations)Enum.Parse(
                     typeof(BonusOperations),
                     dataReceived.Split(';')[1]);
+            const int IndexCardPosiition = 2;
+            const int IndexSumPosition = 3;
 
-            int.TryParse(dataReceived.Split(';')[2], out int cardNum);
-            int.TryParse(dataReceived.Split(';')[3], out int summ);
+            int.TryParse(
+                dataReceived.Split(';')[IndexCardPosiition], out int cardNum);
+            int.TryParse(
+                dataReceived.Split(';')[IndexSumPosition], out int summ);
+
+            DataTable dataTable = null;
+            ResultOperations resultOperation = ResultOperations.None;
 
             switch (bonusOperations)
             {
                 case BonusOperations.Add:
-                    ResultOperations resultOperation =
-                        sqlInstance.AddBonus(out Card card, cardNum, summ);
-
-                    if (resultOperation == ResultOperations.None)
-                    {
-                        streamProcessor.SendDataToUser(
-                            JsonConvert.SerializeObject(card));
-                    }
-                    else
-                    {
-                        streamProcessor.SendDataToUser(
-                            resultOperation.ToString());
-                    }
+                    resultOperation =
+                        sqlInstance.AddBonus(out dataTable, cardNum, summ);
 
                     break;
                 case BonusOperations.Remove:
 
                     resultOperation =
-                        sqlInstance.Charge(out card, cardNum, summ);
-                    // sqlInstance.FindCardByCard(out card, cardNum);
-
-                    if (resultOperation == ResultOperations.None)
-                    {
-                        streamProcessor.SendDataToUser(
-                            JsonConvert.SerializeObject(card));
-                    }
-                    else
-                    {
-                        streamProcessor.SendDataToUser(
-                            resultOperation.ToString());
-                    }
+                        sqlInstance.Charge(out dataTable, cardNum, summ);
 
                     break;
+            }
+
+            if (resultOperation == ResultOperations.None)
+            {
+                streamProcessor.SendDataToUser(
+                  JsonConvert.SerializeObject(dataTable));
+            }
+            else
+            {
+                streamProcessor.SendDataToUser(
+                    resultOperation.ToString());
             }
         }
     }

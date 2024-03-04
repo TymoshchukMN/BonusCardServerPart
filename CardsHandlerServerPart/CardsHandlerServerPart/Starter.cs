@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -31,14 +30,13 @@ namespace CardsHandlerServerPart
         /// </summary>
         public static void StartServer()
         {
-            //SqlSrvConfig sqlSrvConfig = BL.GetServerConfig();
+            SqlSrvConfig sqlSrvConfig = BL.GetServerConfig();
 
-            //int port = sqlSrvConfig.Port;
-            //string sqlServerAddress = sqlSrvConfig.Server;
+            int port = sqlSrvConfig.Port;
+            string sqlServerAddress = sqlSrvConfig.Server;
 
-            int port = 49001;
-            string sqlServerAddress = "127.0.0.1";
-
+            // int port = 49001;
+            // string sqlServerAddress = "127.0.0.1";
             IPAddress ipAddress = IPAddress.Parse(sqlServerAddress);
             TcpListener listener = new TcpListener(ipAddress, port);
             listener.Start();

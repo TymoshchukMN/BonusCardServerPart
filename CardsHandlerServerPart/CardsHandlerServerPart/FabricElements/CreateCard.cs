@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading;
 using CardsHandlerServerPart.Interfaces;
 using Newtonsoft.Json;
@@ -37,16 +38,16 @@ namespace CardsHandlerServerPart
             string middleName = dataReceived.Split(';')[3];
             string lastName = dataReceived.Split(';')[4];
 
-            Card card = new Card(
+            DataTable dataTable = sqlInstance.CreateCard(new Card(
                         cardNumber,
                         phoneNumber,
                         firstName,
                         middleName,
                         lastName,
-                        true);
-            sqlInstance.CreateCard(ref card);
+                        true));
 
-            streamProcessor.SendDataToUser(JsonConvert.SerializeObject(card));
+            streamProcessor.SendDataToUser(
+                JsonConvert.SerializeObject(dataTable));
         }
 
         /// <summary>

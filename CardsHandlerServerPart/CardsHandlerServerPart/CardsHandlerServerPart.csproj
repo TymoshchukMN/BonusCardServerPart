@@ -109,12 +109,11 @@
     <Compile Include="Card.cs" />
     <Compile Include="CardsPool.cs" />
     <Compile Include="Configs\MSDBconfig.cs" />
+    <Compile Include="Configs\SqlSrvConfig.cs" />
     <Compile Include="Data\MSSQLInstance.cs" />
     <Compile Include="FabricElements\ChangeCard.cs" />
-    <Compile Include="Configs\SrvConfig.cs" />
     <Compile Include="FabricElements\CommandFactory.cs" />
     <Compile Include="FabricElements\CreateCard.cs" />
-    <Compile Include="Data\PostgresDB.cs" />
     <Compile Include="Configs\DBConfig.cs" />
     <Compile Include="Enums\BonusOperations.cs" />
     <Compile Include="Enums\CardsOperationList.cs" />

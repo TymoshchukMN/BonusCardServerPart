@@ -101,6 +101,7 @@ namespace CardsHandlerServerPart
         /// <param name="firstName">имя клиента.</param>
         /// <param name="middleName">отчетство клиента.</param>
         /// <param name="lasName">фамилия клиента.</param>
+        /// <param name="isActive">ФлагАктивности.</param>
         public Card(
             int number,
             string phone,
@@ -205,6 +206,5 @@ namespace CardsHandlerServerPart
             get { return _isActive; }
             set { _isActive = value; }
         }
-
     }
 }

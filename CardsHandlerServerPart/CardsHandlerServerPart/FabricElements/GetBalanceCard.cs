@@ -1,4 +1,4 @@
-﻿using CardsHandlerServerPart.Data;
+﻿using System.Data;
 using CardsHandlerServerPart.Interfaces;
 using Newtonsoft.Json;
 
@@ -15,11 +15,12 @@ namespace CardsHandlerServerPart
                 out int cardN);
 
             ResultOperations resultOperation =
-                sqlInstance.FindCardByCardNum(out Card card, cardN);
+                sqlInstance.FindCardByCardNum(out DataTable dataTable, cardN);
 
             if (resultOperation == ResultOperations.None)
             {
-                streamProcessor.SendDataToUser(JsonConvert.SerializeObject(card));
+                streamProcessor.SendDataToUser(
+                  JsonConvert.SerializeObject(dataTable));
             }
             else
             {

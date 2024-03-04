@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using CardsHandlerServerPart.Interfaces;
 using Dapper;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace CardsHandlerServerPart.Data
 {
@@ -82,7 +82,7 @@ namespace CardsHandlerServerPart.Data
 
         #endregion SERVICE
 
-        public void CreateCard(ref Card card)
+        public DataTable CreateCard(Card card)
         {
             DateTime expirationDate = DateTime.Today.AddYears(1);
             var param = new DynamicParameters();
@@ -92,36 +92,31 @@ namespace CardsHandlerServerPart.Data
             param.Add("@firstName", card.FirstName, DbType.String, ParameterDirection.Input);
             param.Add("@middleName", card.MiddleName, DbType.String, ParameterDirection.Input);
             param.Add("@lastName", card.LastName, DbType.String, ParameterDirection.Input);
-            param.Add("@phoneNumber",card.PhoneNumber, DbType.String, ParameterDirection.Input);
-            param.Add("@@isActive", card.ActivityFlag, DbType.String, ParameterDirection.Input);
+            param.Add("@phoneNumber", card.PhoneNumber, DbType.String, ParameterDirection.Input);
+            param.Add("@isActive", card.ActivityFlag, DbType.String, ParameterDirection.Input);
+            DataTable dataTable = new DataTable();
 
-            _connection.Query<Card>(ProcCreateCard, param, commandType: CommandType.StoredProcedure);
-            FindCardByCardNum(out card, card.Cardnumber);
-        }
-
-        public ResultOperations FindCardByPhone(out Card card, string number)
-        {
-            card = new Card();
-            ResultOperations resultOperations = ResultOperations.None;
-            var param = new DynamicParameters();
-            param.Add("@phoneNum", number, DbType.String, ParameterDirection.Input);
-
-            IEnumerable<Card> results = _connection.Query<Card>(
-                ProcGetCardByPhone, param, commandType: CommandType.StoredProcedure);
-
-            if (results.First().Cardnumber == 0)
+            try
             {
-                resultOperations = ResultOperations.CardDoesnExist;
+                _connection.Query<Card>(ProcCreateCard, param, commandType: CommandType.StoredProcedure);
+                param = new DynamicParameters();
+                param.Add("@cardNum", card.Cardnumber, DbType.Int32, ParameterDirection.Input);
+
+                IEnumerable<Card> results = _connection.Query<Card>(
+                    ProcGetCard, param, commandType: CommandType.StoredProcedure);
+
+                FillCardsDataTable(dataTable, results);
             }
-            else
+            catch (Exception ex)
             {
-                FillCard(ref card, ref results);
+                Console.WriteLine(ex.Message);
             }
 
-            return resultOperations;
+            return dataTable;
         }
 
-        public ResultOperations FindCardByPhone(out DataTable dataTable, string number)
+        public ResultOperations FindCardByPhone(
+            out DataTable dataTable, string number)
         {
             ResultOperations resultOperations = ResultOperations.None;
             var param = new DynamicParameters();
@@ -145,9 +140,11 @@ namespace CardsHandlerServerPart.Data
             return resultOperations;
         }
 
-        public ResultOperations FindCardByCardNum(out Card card, int number)
+        public ResultOperations FindCardByCardNum(
+            out DataTable dataTable, int number)
         {
-            card = new Card();
+            dataTable = new DataTable();
+
             ResultOperations resultOperations = ResultOperations.None;
             var param = new DynamicParameters();
             param.Add("@cardNum", number, DbType.Int32, ParameterDirection.Input);
@@ -160,10 +157,120 @@ namespace CardsHandlerServerPart.Data
             }
             else
             {
-                FillCard(ref card, ref results);
+                FillCardsDataTable(dataTable, results);
             }
 
             return resultOperations;
+        }
+
+        public DataTable GetAllCards()
+        {
+            DataTable dataTable = new DataTable();
+
+            IEnumerable<Card> results =
+                _connection.Query<Card>(
+                ProcGetAllCards, commandType: CommandType.StoredProcedure);
+
+            FillCardsDataTable(dataTable, results);
+
+            return dataTable;
+        }
+
+        public void GetLastFreeValue(out int lastFreeVol)
+        {
+            lastFreeVol = _connection.QueryFirstOrDefault<int>(
+                ProcGetMinNumber,
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public ResultOperations AddBonus(
+            out DataTable dataTable, int cardNum, int summ)
+        {
+            dataTable = new DataTable();
+            var parameters = new DynamicParameters();
+            parameters.Add(
+                "@cardNumber", cardNum, DbType.Int32, ParameterDirection.Input);
+            parameters.Add(
+                "@SUM", summ, DbType.Int32, ParameterDirection.Input);
+
+            ResultOperations resultOperations =
+                (ResultOperations)_connection.QueryFirstOrDefault<int>(
+                    ProcAddBonuses,
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+            if (resultOperations == ResultOperations.None)
+            {
+                parameters = new DynamicParameters();
+                parameters.Add(
+                    "@cardNum",
+                    cardNum,
+                    DbType.Int32,
+                    ParameterDirection.Input);
+
+                IEnumerable<Card> results = _connection.Query<Card>(
+                  ProcGetCard,
+                  parameters,
+                  commandType: CommandType.StoredProcedure);
+
+                FillCardsDataTable(dataTable, results);
+            }
+
+            return resultOperations;
+        }
+
+        public ResultOperations Charge(
+            out DataTable dataTable,
+            int cardNum,
+            int summ)
+        {
+            var parameters = new DynamicParameters();
+            dataTable = new DataTable();
+            parameters.Add(
+                "@cardNumber", cardNum, DbType.Int32, ParameterDirection.Input);
+            parameters.Add(
+                "@SUM", summ, DbType.Int32, ParameterDirection.Input);
+
+            ResultOperations resultOperations =
+                (ResultOperations)_connection.QueryFirstOrDefault<int>(
+                    ProcRemoveBonuses,
+                    parameters,
+                    commandType: CommandType.StoredProcedure);
+
+            if (resultOperations == ResultOperations.None)
+            {
+                parameters = new DynamicParameters();
+                parameters.Add(
+                    "@cardNum",
+                    cardNum,
+                    DbType.Int32,
+                    ParameterDirection.Input);
+
+                IEnumerable<Card> results = _connection.Query<Card>(
+                  ProcGetCard,
+                  parameters,
+                  commandType: CommandType.StoredProcedure);
+
+                FillCardsDataTable(dataTable, results);
+            }
+
+            return resultOperations;
+        }
+
+        private static void FillCard(
+            ref Card card, ref IEnumerable<Card> results)
+        {
+            foreach (var item in results)
+            {
+                card.Cardnumber = item.Cardnumber;
+                card.ExpirationDate = item.ExpirationDate;
+                card.Ballance = item.Ballance;
+                card.FirstName = item.FirstName;
+                card.MiddleName = item.MiddleName;
+                card.LastName = item.LastName;
+                card.PhoneNumber = item.PhoneNumber;
+                card.ActivityFlag = item.ActivityFlag;
+            }
         }
 
         private static void FillCardsDataTable(DataTable dataTable, IEnumerable<Card> results)
@@ -186,94 +293,6 @@ namespace CardsHandlerServerPart.Data
                     item.MiddleName,
                     item.LastName,
                     item.PhoneNumber);
-            }
-        }
-
-        public DataTable GetAllCards()
-        {
-            DataTable dataTable = new DataTable();
-
-            IEnumerable<Card> results =
-                _connection.Query<Card>(
-                ProcGetAllCards, commandType: CommandType.StoredProcedure);
-
-            FillCardsDataTable(dataTable, results);
-
-            return dataTable;
-        }
-
-        public ResultOperations GetExpiredCards(out DataTable dataTable)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Получение последнего доступного номера карты.
-        /// </summary>
-        /// <param name="lastFreeVol"></param>
-        public void GetLastFreeValue(out int lastFreeVol)
-        {
-            lastFreeVol = _connection.QueryFirstOrDefault<int>(
-                ProcGetMinNumber,
-                commandType: CommandType.StoredProcedure);
-        }
-
-        public ResultOperations AddBonus(out Card card, int cardNum, int summ)
-        {
-            card = null;
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@cardNumber", cardNum, DbType.Int32, ParameterDirection.Input);
-            parameters.Add("@SUM", summ, DbType.Int32, ParameterDirection.Input);
-
-            ResultOperations resultOperations =
-                (ResultOperations)_connection.QueryFirstOrDefault<int>(
-                    ProcAddBonuses, parameters, commandType: CommandType.StoredProcedure);
-
-            if (resultOperations == ResultOperations.None)
-            {
-                parameters = new DynamicParameters();
-                parameters.Add("@cardNum", cardNum, DbType.Int32, ParameterDirection.Input);
-                card = _connection.QueryFirst<Card>(
-                    ProcGetCard, parameters, commandType: CommandType.StoredProcedure);
-            }
-
-            return resultOperations;
-        }
-
-        public ResultOperations Charge(out Card card, int cardNum, int summ)
-        {
-            card = null;
-            var param = new DynamicParameters();
-            param.Add("@cardNumber", cardNum, DbType.Int32, ParameterDirection.Input);
-            param.Add("@SUM", summ, DbType.Int32, ParameterDirection.Input);
-
-            ResultOperations resultOperations =
-                (ResultOperations)_connection.QueryFirstOrDefault<int>(ProcRemoveBonuses, param, commandType: CommandType.StoredProcedure);
-
-            if (resultOperations == ResultOperations.None)
-            {
-                param = new DynamicParameters();
-                param.Add("@cardNum", cardNum, DbType.Int32, ParameterDirection.Input);
-                card = _connection.QueryFirst<Card>(
-                    ProcGetCard, param, commandType: CommandType.StoredProcedure);
-            }
-
-            return resultOperations;
-        }
-
-        private static void FillCard(ref Card card, ref IEnumerable<Card> results)
-        {
-            foreach (var item in results)
-            {
-                card.Cardnumber = item.Cardnumber;
-                card.ExpirationDate = item.ExpirationDate;
-                card.Ballance = item.Ballance;
-                card.FirstName = item.FirstName;
-                card.MiddleName = item.MiddleName;
-                card.LastName = item.LastName;
-                card.PhoneNumber = item.PhoneNumber;
-                card.ActivityFlag = item.ActivityFlag;
             }
         }
     }
